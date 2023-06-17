@@ -1,6 +1,6 @@
 package com.madhu.myweather.useCases
 
-import com.madhu.myweather.data.WeatherInfo
+import com.madhu.myweather.useCases.data.WeatherInfo
 import com.madhu.myweather.useCases.repository.GetWeatherInfoRepository
 
 class GetWeatherInfoUseCase(getWeatherInforepository: GetWeatherInfoRepository) {

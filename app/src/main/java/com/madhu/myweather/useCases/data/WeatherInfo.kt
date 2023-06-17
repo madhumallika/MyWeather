@@ -1,4 +1,4 @@
-package com.madhu.myweather.data
+package com.madhu.myweather.useCases.data
 
 data class WeatherInfo(
     val temperature: String,
