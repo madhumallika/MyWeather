@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/enterCityFragment">
+
+    <fragment
+        android:id="@+id/enterCityFragment"
+        android:name="com.madhu.myweather.EnterCityFragment"
+        android:label="fragment_enter_city"
+        tools:layout="@layout/fragment_enter_city" >
+        <action
+            android:id="@+id/action_enterCityFragment_to_weatherInfoFragment"
+            app:destination="@id/weatherInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/weatherInfoFragment"
+        android:name="com.madhu.myweather.WeatherInfoFragment"
+        android:label="fragment_weather_info"
+        tools:layout="@layout/fragment_weather_info" />
+</navigation>
