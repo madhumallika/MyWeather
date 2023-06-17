@@ -18,5 +18,9 @@
         android:id="@+id/weatherInfoFragment"
         android:name="com.madhu.myweather.WeatherInfoFragment"
         android:label="fragment_weather_info"
-        tools:layout="@layout/fragment_weather_info" />
+        tools:layout="@layout/fragment_weather_info">
+        <argument
+            android:name="cityName"
+            app:argType="string" />
+    </fragment>
 </navigation>
