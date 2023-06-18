@@ -1,1 +1,1 @@
-const val KEY = "3a9bfd5d43d5acbd7972ef357d2c014b"
+const val API_KEY = "3a9bfd5d43d5acbd7972ef357d2c014b"

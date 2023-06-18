@@ -1,9 +1,10 @@
 package com.madhu.myweather.useCases.data
 
 data class WeatherInfo(
-    val temperature: String,
+    val name: String,
+    val temperature: Double,
     val weatherDescription: String,
-    val highTemperature: String,
-    val lowTemperature: String,
+    val highTemperature: Double,
+    val lowTemperature: Double,
     val humidity: Int
 )

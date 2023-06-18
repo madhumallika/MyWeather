@@ -1,19 +1,22 @@
 package com.madhu.myweather.useCases.repository
 
+import com.madhu.myweather.data.WeatherResponse
 import com.madhu.myweather.network.GetLocationService
 import com.madhu.myweather.network.GetWeatherInfoService
 
 class GetWeatherInfoRepository(
-    val getWeatherInfoService: GetWeatherInfoService,
-    val getLocationService: GetLocationService
+    private val getWeatherInfoService: GetWeatherInfoService,
+    private val getLocationService: GetLocationService
 ) {
 
-    private suspend fun getCurrentWeather(latitude: Double, longtitude: Double) {
-        val weatherResponse = getWeatherInfoService.getWeatherData(latitude, longtitude)
+    private suspend fun getCurrentWeather(
+        latitude: Double, longitude: Double
+    ): WeatherResponse {
+        return getWeatherInfoService.getWeatherData(latitude, longitude)
     }
 
-    suspend fun getCurrentWeather(cityName: String) {
+    suspend fun getCurrentWeather(cityName: String): WeatherResponse {
         val locationResponse = getLocationService.getLocation(cityName)
-        getCurrentWeather(locationResponse[0].lat, locationResponse[0].lon)
+        return getCurrentWeather(locationResponse[0].lat, locationResponse[0].lon)
     }
 }

@@ -30,7 +30,7 @@ class RetrofitModule {
     @LocationRetrofit
     fun provideLocationRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://api.openweathermap.org/geo/1.0/")
+            .baseUrl("https://api.openweathermap.org/geo/1.0/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
