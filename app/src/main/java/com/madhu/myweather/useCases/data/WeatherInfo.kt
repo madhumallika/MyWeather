@@ -6,5 +6,6 @@ data class WeatherInfo(
     val weatherDescription: String,
     val highTemperature: Double,
     val lowTemperature: Double,
-    val humidity: Int
+    val humidity: Int,
+    val icon: String
 )

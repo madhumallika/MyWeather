@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.madhu.myweather.databinding.FragmentWeatherInfoBinding
+import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -37,6 +38,7 @@ class WeatherInfoFragment : Fragment() {
             binding.txtDescription.text = it.weatherDescription
             binding.txtTempHigh.text = it.highTemperature.toString()
             binding.txtTempLow.text = it.lowTemperature.toString()
+            Picasso.get().load(it.icon).into(binding.imgWeatherIcon)
             binding.progressBarWeatherInfo.visibility = View.GONE
         }
     }

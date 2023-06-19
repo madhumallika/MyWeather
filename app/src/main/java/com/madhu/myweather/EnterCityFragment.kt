@@ -1,11 +1,18 @@
 package com.madhu.myweather
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,22 +21,12 @@ import com.google.android.material.snackbar.Snackbar
 import com.madhu.myweather.databinding.FragmentEnterCityBinding
 import dagger.hilt.android.AndroidEntryPoint
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [EnterCityFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-
 @AndroidEntryPoint
 class EnterCityFragment : Fragment() {
 
     lateinit var binding: FragmentEnterCityBinding
     private val enterCityViewModel: EnterCityViewModel by viewModels()
+    private var locationManager: LocationManager? = null
 
     private val enterCityTextWatcher = object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -61,6 +58,7 @@ class EnterCityFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.editTextCity.addTextChangedListener(enterCityTextWatcher)
         initSearchButton()
+        initCurrentLocationButton()
         enterCityViewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner) {
             binding.progressBarEnterCity.isVisible = it
         }
@@ -73,40 +71,101 @@ class EnterCityFragment : Fragment() {
         }
     }
 
+    private fun initCurrentLocationButton() {
+        binding.btnCurrentLocation.setOnClickListener {
+            listenToLocationUpdates()
+        }
+    }
+
+    private fun listenToLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            locationManager =
+                requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            locationManager?.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER, 0, 0f, locationListener
+            )
+            locationManager?.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                0,
+                0f,
+                locationListener
+            )
+        } else {
+            requestPermissions(
+                arrayOf(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+        }
+    }
+
     private fun initSearchButton() {
         binding.btnSearch.setOnClickListener {
             enterCityViewModel.fetchLocationInfo(binding.editTextCity.text.toString())
                 .observe(viewLifecycleOwner) {
                     it?.let {
                         binding.editTextCity.error = null
-                        findNavController().navigate(
-                            EnterCityFragmentDirections.actionEnterCityFragmentToWeatherInfoFragment(
-                                it.latitude.toFloat(), it.longitude.toFloat()
-                            )
-                        )
                     }
                     if (it == null) binding.editTextCity.error = "Enter a Valid City!!"
                 }
         }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment EnterCityFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            EnterCityFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            listenToLocationUpdates()
+        } else {
+            val snackbar = Snackbar.make(
+                requireView(),
+                "Location Permission is needed to get current location",
+                Snackbar.LENGTH_LONG
+            )
+            snackbar.setAction("Close") {
+                snackbar.dismiss()
             }
+            snackbar.show()
+        }
+    }
+
+    private val locationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            locationManager?.removeUpdates(this)
+            findNavController().navigate(
+                EnterCityFragmentDirections.actionEnterCityFragmentToWeatherInfoFragment(
+                    location.latitude.toFloat(), location.longitude.toFloat()
+                )
+            )
+        }
+
+        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+
+        override fun onProviderEnabled(provider: String) {}
+
+        override fun onProviderDisabled(provider: String) {}
+    }
+
+    override fun onStop() {
+        super.onStop()
+        locationManager?.removeUpdates(locationListener)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        locationManager?.removeUpdates(locationListener)
+    }
+
+    companion object {
+        const val LOCATION_PERMISSION_REQUEST_CODE = 1001
     }
 }

@@ -13,7 +13,12 @@ class GetWeatherInfoUseCase(private val getWeatherInforepository: GetWeatherInfo
             highTemperature = weatherResponse.main.temp_max,
             lowTemperature = weatherResponse.main.temp_min,
             humidity = weatherResponse.main.humidity,
-            name = weatherResponse.name
+            name = weatherResponse.name,
+            icon = String.format(IMAGE_BASE_URL, weatherResponse.weather[0].icon)
         )
+    }
+
+    companion object {
+        const val IMAGE_BASE_URL = "https://openweathermap.org/img/wn/%s@4x.png"
     }
 }
