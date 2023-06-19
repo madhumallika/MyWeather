@@ -17,10 +17,10 @@ class WeatherInfoViewModel @Inject constructor(
 ) : ViewModel() {
 
     val weatherInfoMutableLiveData: MutableLiveData<WeatherInfo> = MutableLiveData()
-    fun fetchWeatherInfo(cityName: String) {
+    fun fetchWeatherInfo(latitude: Double, longitude: Double) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val weatherInfo = getWeatherInfoUseCase.getWeatherInfo(cityName)
+                val weatherInfo = getWeatherInfoUseCase.getWeatherInfo(latitude, longitude)
                 weatherInfoMutableLiveData.postValue(weatherInfo)
             }
 

@@ -20,7 +20,10 @@
         android:label="fragment_weather_info"
         tools:layout="@layout/fragment_weather_info">
         <argument
-            android:name="cityName"
-            app:argType="string" />
+            android:name="latitude"
+            app:argType="float" />
+        <argument
+            android:name="longitude"
+            app:argType="float" />
     </fragment>
 </navigation>

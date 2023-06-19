@@ -6,9 +6,13 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.madhu.myweather.databinding.FragmentEnterCityBinding
+import dagger.hilt.android.AndroidEntryPoint
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,9 +24,12 @@ private const val ARG_PARAM2 = "param2"
  * Use the [EnterCityFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
+@AndroidEntryPoint
 class EnterCityFragment : Fragment() {
 
     lateinit var binding: FragmentEnterCityBinding
+    private val enterCityViewModel: EnterCityViewModel by viewModels()
 
     private val enterCityTextWatcher = object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -53,12 +60,33 @@ class EnterCityFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.editTextCity.addTextChangedListener(enterCityTextWatcher)
+        initSearchButton()
+        enterCityViewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner) {
+            binding.progressBarEnterCity.isVisible = it
+        }
+        enterCityViewModel.errorLiveData.observe(viewLifecycleOwner) {
+            val errorSnackbar = Snackbar.make(view, it, Snackbar.LENGTH_LONG)
+            errorSnackbar.setAction("Close") {
+                errorSnackbar.dismiss()
+            }
+            errorSnackbar.show()
+        }
+    }
+
+    private fun initSearchButton() {
         binding.btnSearch.setOnClickListener {
-            findNavController().navigate(
-                EnterCityFragmentDirections.actionEnterCityFragmentToWeatherInfoFragment(
-                    binding.editTextCity.text.toString()
-                )
-            )
+            enterCityViewModel.fetchLocationInfo(binding.editTextCity.text.toString())
+                .observe(viewLifecycleOwner) {
+                    it?.let {
+                        binding.editTextCity.error = null
+                        findNavController().navigate(
+                            EnterCityFragmentDirections.actionEnterCityFragmentToWeatherInfoFragment(
+                                it.latitude.toFloat(), it.longitude.toFloat()
+                            )
+                        )
+                    }
+                    if (it == null) binding.editTextCity.error = "Enter a Valid City!!"
+                }
         }
     }
 

@@ -27,14 +27,17 @@ class WeatherInfoFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val cityName = WeatherInfoFragmentArgs.fromBundle(requireArguments()).cityName
-        weatherInfoViewModel.fetchWeatherInfo(cityName)
+        val latitude = WeatherInfoFragmentArgs.fromBundle(requireArguments()).latitude
+        val longitude = WeatherInfoFragmentArgs.fromBundle(requireArguments()).longitude
+        binding.progressBarWeatherInfo.visibility = View.VISIBLE
+        weatherInfoViewModel.fetchWeatherInfo(latitude.toDouble(), longitude.toDouble())
         weatherInfoViewModel.weatherInfoMutableLiveData.observe(viewLifecycleOwner) {
             binding.txtCity.text = it.name
             binding.txtTemperature.text = it.temperature.toString()
             binding.txtDescription.text = it.weatherDescription
             binding.txtTempHigh.text = it.highTemperature.toString()
             binding.txtTempLow.text = it.lowTemperature.toString()
+            binding.progressBarWeatherInfo.visibility = View.GONE
         }
     }
 }

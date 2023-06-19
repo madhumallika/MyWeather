@@ -2,6 +2,7 @@ package com.madhu.myweather.di
 
 import com.madhu.myweather.network.GetLocationService
 import com.madhu.myweather.network.GetWeatherInfoService
+import com.madhu.myweather.useCases.repository.GetLocationInfoRepository
 import com.madhu.myweather.useCases.repository.GetWeatherInfoRepository
 import dagger.Module
 import dagger.Provides
@@ -15,9 +16,16 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideGetWeatherInfoRepository(
-        getWeatherInfoService: GetWeatherInfoService,
-        getLocationService: GetLocationService
+        getWeatherInfoService: GetWeatherInfoService
     ): GetWeatherInfoRepository {
-        return GetWeatherInfoRepository(getWeatherInfoService, getLocationService)
+        return GetWeatherInfoRepository(getWeatherInfoService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetLocationInfoRepository(
+        getLocationService: GetLocationService
+    ): GetLocationInfoRepository {
+        return GetLocationInfoRepository(getLocationService)
     }
 }
