@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface GetWeatherInfoService {
 
-    @GET("weather")
+    @GET("weather?units=metric")
     suspend fun getWeatherData(
         @Query("lat") latitude: Double,
         @Query("lon") longitude: Double,
