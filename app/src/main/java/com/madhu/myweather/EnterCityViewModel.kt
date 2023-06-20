@@ -16,18 +16,19 @@ class EnterCityViewModel @Inject constructor(
 
     val progressBarVisibilityLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val errorLiveData: MutableLiveData<String> = MutableLiveData()
+    val locationInfoMutableLiveData: MutableLiveData<LocationInfo?> = MutableLiveData()
 
     fun fetchLocationInfo(cityName: String): MutableLiveData<LocationInfo?> {
-        val locationInfoMutableLiveData: MutableLiveData<LocationInfo?> = MutableLiveData()
-        try {
-            viewModelScope.launch {
+
+        viewModelScope.launch {
+            try {
                 progressBarVisibilityLiveData.value = true
                 val locationInfo = getLocationInfoUseCase.getLocationInfo(cityName)
                 locationInfoMutableLiveData.postValue(locationInfo)
                 progressBarVisibilityLiveData.value = false
+            } catch (ex: Exception) {
+                errorLiveData.value = "An Error occurred while fetching Location"
             }
-        } catch (ex: Exception) {
-            errorLiveData.value = "An Error occurred while fetching Location"
         }
         return locationInfoMutableLiveData
     }

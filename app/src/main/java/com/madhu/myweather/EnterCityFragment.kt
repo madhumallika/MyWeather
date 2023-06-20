@@ -111,6 +111,11 @@ class EnterCityFragment : Fragment() {
                 .observe(viewLifecycleOwner) {
                     it?.let {
                         binding.editTextCity.error = null
+                        findNavController().navigate(
+                            EnterCityFragmentDirections.actionEnterCityFragmentToWeatherInfoFragment(
+                                it.latitude.toFloat(), it.longitude.toFloat()
+                            )
+                        )
                     }
                     if (it == null) binding.editTextCity.error = "Enter a Valid City!!"
                 }

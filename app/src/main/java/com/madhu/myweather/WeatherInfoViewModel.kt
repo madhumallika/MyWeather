@@ -6,9 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.madhu.myweather.useCases.GetWeatherInfoUseCase
 import com.madhu.myweather.useCases.data.WeatherInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,13 +15,19 @@ class WeatherInfoViewModel @Inject constructor(
 ) : ViewModel() {
 
     val weatherInfoMutableLiveData: MutableLiveData<WeatherInfo> = MutableLiveData()
+    val errorLiveData: MutableLiveData<String> = MutableLiveData()
+    val progressBarVisibilityLiveData: MutableLiveData<Boolean> = MutableLiveData()
     fun fetchWeatherInfo(latitude: Double, longitude: Double) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
+            progressBarVisibilityLiveData.value = true
+
+            try {
                 val weatherInfo = getWeatherInfoUseCase.getWeatherInfo(latitude, longitude)
                 weatherInfoMutableLiveData.postValue(weatherInfo)
+                progressBarVisibilityLiveData.value = false
+            } catch (ex: Exception) {
+                errorLiveData.value = "Error Occurred when fetching weather Info!!"
             }
-
         }
 
     }
