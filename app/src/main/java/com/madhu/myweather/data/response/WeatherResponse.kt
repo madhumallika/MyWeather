@@ -1,4 +1,4 @@
-package com.madhu.myweather.data
+package com.madhu.myweather.data.response
 
 data class WeatherResponse(
     val base: String,

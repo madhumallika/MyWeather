@@ -1,7 +1,8 @@
-package com.madhu.myweather
+package com.madhu.myweather.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.madhu.myweather.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

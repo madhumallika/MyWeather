@@ -1,4 +1,4 @@
-package com.madhu.myweather.data.locationdata
+package com.madhu.myweather.data.response.locationdata
 
 data class LocationResponseItem(
     val country: String,

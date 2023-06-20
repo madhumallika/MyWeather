@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/enterCityFragment"
-        android:name="com.madhu.myweather.EnterCityFragment"
+        android:name="com.madhu.myweather.view.EnterCityFragment"
         android:label="fragment_enter_city"
         tools:layout="@layout/fragment_enter_city" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/weatherInfoFragment"
-        android:name="com.madhu.myweather.WeatherInfoFragment"
+        android:name="com.madhu.myweather.view.WeatherInfoFragment"
         android:label="fragment_weather_info"
         tools:layout="@layout/fragment_weather_info">
         <argument
@@ -25,5 +25,8 @@
         <argument
             android:name="longitude"
             app:argType="float" />
+        <argument
+            android:name="UseLastSavedLocation"
+            app:argType="boolean" />
     </fragment>
 </navigation>

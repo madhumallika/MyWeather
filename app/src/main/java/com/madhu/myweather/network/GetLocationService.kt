@@ -1,7 +1,7 @@
 package com.madhu.myweather.network
 
 import API_KEY
-import com.madhu.myweather.data.locationdata.LocationResponse
+import com.madhu.myweather.data.response.locationdata.LocationResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

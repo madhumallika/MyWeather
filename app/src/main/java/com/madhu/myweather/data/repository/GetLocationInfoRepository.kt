@@ -1,6 +1,6 @@
-package com.madhu.myweather.useCases.repository
+package com.madhu.myweather.data.repository
 
-import com.madhu.myweather.data.locationdata.LocationResponse
+import com.madhu.myweather.data.response.locationdata.LocationResponse
 import com.madhu.myweather.network.GetLocationService
 
 class GetLocationInfoRepository(

@@ -3,6 +3,7 @@ package com.madhu.myweather
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.madhu.myweather.useCases.GetLocatioInfoUseCase
 import com.madhu.myweather.useCases.data.LocationInfo
+import com.madhu.myweather.viewModel.EnterCityViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK

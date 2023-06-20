@@ -1,8 +1,10 @@
 package com.madhu.myweather
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.madhu.myweather.useCases.GetLastSavedLocationUseCase
 import com.madhu.myweather.useCases.GetWeatherInfoUseCase
 import com.madhu.myweather.useCases.data.WeatherInfo
+import com.madhu.myweather.viewModel.WeatherInfoViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -26,10 +28,14 @@ internal class WeatherInfoViewModelTest {
     @MockK
     lateinit var getWeatherInfoUseCase: GetWeatherInfoUseCase
 
+    @MockK
+    lateinit var getLastSavedLocationUseCase: GetLastSavedLocationUseCase
+
     @Before
     fun setUp() {
         MockKAnnotations.init(this, relaxed = true)
-        weatherInfoViewModel = WeatherInfoViewModel(getWeatherInfoUseCase)
+        weatherInfoViewModel =
+            WeatherInfoViewModel(getWeatherInfoUseCase, getLastSavedLocationUseCase)
         Dispatchers.setMain(testDispatcher)
     }
 

@@ -1,7 +1,7 @@
 package com.madhu.myweather.useCases
 
+import com.madhu.myweather.data.repository.GetLocationInfoRepository
 import com.madhu.myweather.useCases.data.LocationInfo
-import com.madhu.myweather.useCases.repository.GetLocationInfoRepository
 
 class GetLocatioInfoUseCase(
     private val getLocationInfoRepository: GetLocationInfoRepository

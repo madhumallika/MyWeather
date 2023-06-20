@@ -5,4 +5,5 @@
     <string name="enter_city_name">Enter City Name</string>
     <string name="search">Search</string>
     <string name="current_location">Current Location</string>
+    <string name="last_search">Last Search</string>
 </resources>

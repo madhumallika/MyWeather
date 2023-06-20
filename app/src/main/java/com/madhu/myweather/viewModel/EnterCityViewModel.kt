@@ -1,4 +1,4 @@
-package com.madhu.myweather
+package com.madhu.myweather.viewModel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

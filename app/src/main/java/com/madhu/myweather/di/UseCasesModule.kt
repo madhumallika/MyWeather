@@ -1,32 +1,37 @@
 package com.madhu.myweather.di
 
+import com.madhu.myweather.data.repository.GetLocationInfoRepository
+import com.madhu.myweather.data.repository.GetWeatherInfoRepository
+import com.madhu.myweather.data.response.database.WeatherDao
+import com.madhu.myweather.useCases.GetLastSavedLocationUseCase
 import com.madhu.myweather.useCases.GetLocatioInfoUseCase
 import com.madhu.myweather.useCases.GetWeatherInfoUseCase
-import com.madhu.myweather.useCases.repository.GetLocationInfoRepository
-import com.madhu.myweather.useCases.repository.GetWeatherInfoRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class UseCasesModule {
 
     @Provides
-    @Singleton
     fun provideGetWeatherInfoUseCase(
-        getWeatherInfoRepository: GetWeatherInfoRepository
+        getWeatherInfoRepository: GetWeatherInfoRepository,
+        weatherDao: WeatherDao
     ): GetWeatherInfoUseCase {
-        return GetWeatherInfoUseCase(getWeatherInfoRepository)
+        return GetWeatherInfoUseCase(getWeatherInfoRepository, weatherDao)
     }
 
     @Provides
-    @Singleton
     fun provideGetLocationInfoUseCase(
         getLocationInfoRepository: GetLocationInfoRepository
     ): GetLocatioInfoUseCase {
         return GetLocatioInfoUseCase(getLocationInfoRepository)
+    }
+
+    @Provides
+    fun provideGetLastSavedLocationUseCase(weatherDao: WeatherDao): GetLastSavedLocationUseCase {
+        return GetLastSavedLocationUseCase((weatherDao))
     }
 }

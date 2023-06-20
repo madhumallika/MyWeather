@@ -1,4 +1,4 @@
-package com.madhu.myweather
+package com.madhu.myweather.view
 
 import android.Manifest
 import android.content.Context
@@ -19,6 +19,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.madhu.myweather.databinding.FragmentEnterCityBinding
+import com.madhu.myweather.viewModel.EnterCityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,6 +28,8 @@ class EnterCityFragment : Fragment() {
     lateinit var binding: FragmentEnterCityBinding
     private val enterCityViewModel: EnterCityViewModel by viewModels()
     private var locationManager: LocationManager? = null
+    val sharedPreferences = context?.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+    val editor = sharedPreferences?.edit()
 
     private val enterCityTextWatcher = object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -59,6 +62,7 @@ class EnterCityFragment : Fragment() {
         binding.editTextCity.addTextChangedListener(enterCityTextWatcher)
         initSearchButton()
         initCurrentLocationButton()
+        initLastSearch()
         enterCityViewModel.progressBarVisibilityLiveData.observe(viewLifecycleOwner) {
             binding.progressBarEnterCity.isVisible = it
         }
@@ -105,15 +109,32 @@ class EnterCityFragment : Fragment() {
         }
     }
 
+
+    private fun initLastSearch() {
+        val latitude = sharedPreferences?.getFloat("latitude", 0.0f)
+        val longitude = sharedPreferences?.getFloat("longitude", 0.0f)
+        binding.btnLastSearch.setOnClickListener {
+            findNavController().navigate(
+                EnterCityFragmentDirections.actionEnterCityFragmentToWeatherInfoFragment(
+                    0f, 0f, true
+                )
+            )
+        }
+
+    }
+
     private fun initSearchButton() {
         binding.btnSearch.setOnClickListener {
             enterCityViewModel.fetchLocationInfo(binding.editTextCity.text.toString())
                 .observe(viewLifecycleOwner) {
                     it?.let {
+                        editor?.putFloat("latitude", it.latitude.toFloat())
+                        editor?.putFloat("longitude", it.longitude.toFloat())
+                        editor?.apply()
                         binding.editTextCity.error = null
                         findNavController().navigate(
                             EnterCityFragmentDirections.actionEnterCityFragmentToWeatherInfoFragment(
-                                it.latitude.toFloat(), it.longitude.toFloat()
+                                it.latitude.toFloat(), it.longitude.toFloat(), false
                             )
                         )
                     }
@@ -148,7 +169,7 @@ class EnterCityFragment : Fragment() {
             locationManager?.removeUpdates(this)
             findNavController().navigate(
                 EnterCityFragmentDirections.actionEnterCityFragmentToWeatherInfoFragment(
-                    location.latitude.toFloat(), location.longitude.toFloat()
+                    location.latitude.toFloat(), location.longitude.toFloat(), false
                 )
             )
         }
