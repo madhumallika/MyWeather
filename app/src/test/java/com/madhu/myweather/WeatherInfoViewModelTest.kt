@@ -22,7 +22,7 @@ internal class WeatherInfoViewModelTest {
     @get: Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
-    lateinit var weatherInfoViewModel: WeatherInfoViewModel
+    private lateinit var weatherInfoViewModel: WeatherInfoViewModel
     private val testDispatcher = TestCoroutineDispatcher()
 
     @MockK
@@ -70,5 +70,26 @@ internal class WeatherInfoViewModelTest {
         coEvery { getWeatherInfoUseCase.getWeatherInfo(0.0, 0.0) } throws Exception()
         weatherInfoViewModel.fetchWeatherInfo(0.0, 0.0)
         assertNotNull(weatherInfoViewModel.errorLiveData.getOrAwaitValue())
+    }
+
+    @Test
+    fun verifyLastSavedWeatherInfo() = runTest {
+        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
+        Dispatchers.setMain(testDispatcher)
+        val lastSavedWeather = WeatherInfo(
+            name = "plainfield",
+            temperature = 20.0,
+            weatherDescription = "description",
+            highTemperature = 100.0,
+            lowTemperature = 10.0,
+            humidity = 30,
+            icon = "102"
+        )
+        coEvery { getLastSavedLocationUseCase.getLastSavedLocationWeather() } returns lastSavedWeather
+        weatherInfoViewModel.fetchLastSavedWeatherInfo()
+        assertEquals(
+            weatherInfoViewModel.fetchLastSavedWeatherInfo().getOrAwaitValue(),
+            lastSavedWeather
+        )
     }
 }
